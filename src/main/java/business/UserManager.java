@@ -28,6 +28,7 @@ public class UserManager {
      * @param username username of the user we want to search.
      * @return a user by the specified username.
      */
+    //Use this search function as connect function when user enter username
     public User searchByUsername(String username) {
         User user = null;
         synchronized (usersList) {

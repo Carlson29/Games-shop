@@ -14,4 +14,6 @@ public class GameService {
     public static final String VIEW_REQUEST = "VIEW";
     public static final String END_REQUEST = "END";
     public static final String END_RESPONSE = "ENDED";
+
+    //what to use for DELIMITER, we used %% for Michelle for film service
 }
