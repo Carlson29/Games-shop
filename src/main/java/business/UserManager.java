@@ -33,11 +33,17 @@ public class UserManager {
         User user = null;
         synchronized (usersList) {
             for (User u : usersList) {
-                if (u.getUserName().equals(username)) {
+                if (u.getUserName().equalsIgnoreCase(username)) {
                     user = u;
                 }
             }
         }
+        return user;
+    }
+
+    public User addUser(String username) {
+        User user = new User(username);
+        usersList.add(user);
         return user;
     }
 }
