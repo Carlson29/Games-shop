@@ -1,60 +1,74 @@
 package business;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GameManager {
 
-    HashMap<String, Game> games;
+    private ArrayList<Game> games;
 
     public GameManager() {
-        games = new HashMap<>();
+        games = new ArrayList<Game>();
         bootstrapGameList();
     }
-    private void bootstrapGameList()
-    {
-        Game g1 = new Game("Star Wars Outlaws - Xbox Series X", 1, 20);
-        Game g2 = new Game("Lego Marvel’s Avengers - Nintendo 3DS", 5, 18);
-        Game g3 = new Game("Jumanji The Video Game For Xbox One", 1, 80);
-        Game g4 = new Game("Mario vs Donkey Kong - Nintendo Switch", 2, 25);
-        games.put(g3.getGameName(), g3);
-        games.put(g1.getGameName(), g1);
-        games.put(g2.getGameName(), g2);
-        games.put(g4.getGameName(), g4);
+
+    private void bootstrapGameList() {
+        Game g1 = new Game("Star Wars Outlaws - Xbox Series X", "John", 20);
+        Game g2 = new Game("Lego Marvel’s Avengers - Nintendo 3DS", "Sam", 18);
+        Game g3 = new Game("Jumanji The Video Game For Xbox One", "Joanne", 80);
+        Game g4 = new Game("Mario vs Donkey Kong - Nintendo Switch", "Paul", 25);
+        games.add(g3);
+        games.add(g1);
+        games.add(g2);
+        games.add(g4);
     }
 
-    /**
-     * Adds a new game to the hashmap
-     *
-     * @param g for Game
-     * @return true if the game was added or false if there's a game with the same title in the hashMap
-     * @throws NullPointerException if the game is null
-     **/
-
-    public boolean add(Game g) {
-        if (g == null) {
-            throw new NullPointerException("Game can't be null");
+    public String getGames() {
+        String output = "";
+        for (Game g : games) {
+            output += g.getGameName() + GameService.DELIMITER + "";
         }
-        synchronized (games) {
-            if (!games.containsKey(g.getGameName())) {
-                games.put(g.getGameName(), g);
+        return output;
+    }
+
+    public boolean addGame(String gameName, String gameOwner, double price) {
+        if (containsGame(gameName, gameOwner, price) == false) {
+            Game g = new Game(gameName, gameOwner, price);
+            games.add(g);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean containsGame(String gameName, String gameOwner, double price) {
+        Game g = new Game(gameName, gameOwner, price);
+        for (Game g1 : games) {
+            if (g.equals(g1)) {
                 return true;
             }
         }
         return false;
     }
 
-    /**
-     * removes a game from the hashMap
-     *
-     * @param gameName, the name of the game
-     * @return true if the game exist, and it was removed successfully or false if there's no game with the gameName
-     **/
-    public boolean remove(String gameName) {
-        if (games.containsKey(gameName)) {
-            games.remove(gameName);
-            return true;
+    public Game removeGame(String gameName, String gameOwner, double price) {
+        Game game = new Game(gameName, gameOwner, price);
+        for (int i = 0; i < games.size(); i++) {
+            if (games.get(i).equals(game)) {
+                Game g = games.remove(i);
+                return g;
+            }
         }
-        return false;
+        return null;
+    }
+
+    public Game buyGame(Order order) {
+        for (int i = 0; i < games.size(); i++) {
+            if(games.get(i).getGameName().equalsIgnoreCase(order.getGameName()) && games.get(i).getPrice() <= order.getPrice()) {
+                Game g = games.remove(i);
+                return g;
+            }
+        }
+        return null;
     }
 
     //need function of new order and cancel order
