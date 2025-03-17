@@ -4,12 +4,12 @@ import java.util.Objects;
 
 public class Game {
     private String gameName;
-    private int quantity;
+    private String gameOwner;
     private double price;
 
-    public Game(String gameName, int quantity, double price) {
+    public Game(String gameName, String gameOwner, double price) {
         this.gameName = gameName;
-        this.quantity = quantity;
+        this.gameOwner = gameOwner;
         this.price = price;
     }
 
@@ -21,13 +21,6 @@ public class Game {
         this.gameName = gameName;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 
     public double getPrice() {
         return price;
@@ -37,24 +30,32 @@ public class Game {
         this.price = price;
     }
 
+    public String getGameOwner() {
+        return gameOwner;
+    }
+
+    public void setGameOwner(String gameOwner) {
+        this.gameOwner = gameOwner;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Game game = (Game) o;
-        return quantity == game.quantity && Double.compare(price, game.price) == 0 && Objects.equals(gameName, game.gameName);
+        return Double.compare(price, game.price) == 0 && Objects.equals(gameName, game.gameName) && Objects.equals(gameOwner, game.gameOwner);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(gameName, quantity, price);
+        return Objects.hash(gameName, gameOwner, price);
     }
 
     @Override
     public String toString() {
         return "Game{" +
                 "gameName='" + gameName + '\'' +
-                ", quantity=" + quantity +
-                ", price=" + price +
+                " gameOwner='" + gameOwner + '\'' +
+                " price=" + price +
                 '}';
     }
 }
