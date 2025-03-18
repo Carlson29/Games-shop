@@ -28,8 +28,14 @@ public class OrderManager {
 
     public String getOrders() {
         String output = "";
-        for (Order o : orders){
-            output += o.toString() + GameService.DELIMITER + "";
+        for (int i = 0; i < orders.size(); i++) {
+            if (i != orders.size() - 1) {
+                output += orders.get(i).getUserName() + GameService.DELIMITER + orders.get(i).getGameName() + GameService.DELIMITER + orders.get(i).getPrice()+ "%%";
+            }
+            else {
+                output += orders.get(i).getUserName() + GameService.DELIMITER + orders.get(i).getGameName() + GameService.DELIMITER + orders.get(i).getPrice();
+            }
+
         }
         return output;
     }
@@ -37,7 +43,7 @@ public class OrderManager {
     public boolean containsOrder(String userName, String gameName, double price) {
         Order o1 = new Order(userName, gameName, price);
         for (Order o : orders) {
-            if (o1.equals(o)) {
+            if (o1.getUserName().equals(o.getUserName()) && o1.getGameName().equalsIgnoreCase(o.getGameName()) && o1.getPrice() == o.getPrice()) {
                 return true;
             }
         }
@@ -47,7 +53,7 @@ public class OrderManager {
     public boolean removeOrder(String userName, String gameName, double price) {
         Order o1 = new Order(userName, gameName, price);
         for (int i = 0; i < orders.size(); i++) {
-            if (o1.equals(orders.get(i))) {
+            if (o1.getUserName().equalsIgnoreCase(orders.get(i).getUserName()) && o1.getGameName().equalsIgnoreCase(orders.get(i).getGameName()) && o1.getPrice() == orders.get(i).getPrice()) {
                 orders.remove(i);
                 return true;
             }
