@@ -35,7 +35,7 @@ public class GameServer {
                 User currentUser = null;
                 while (userSession) {
                     incomingMessage = input.nextLine();
-                    System.out.println("Server received: " +incomingMessage);
+                    System.out.println("Server received: " + incomingMessage);
                     String[] tokens = incomingMessage.split(GameService.ACTION_DELIMITER);
                     String action = "";
                     if (tokens.length >= 1) {
@@ -68,21 +68,20 @@ public class GameServer {
                                                         response = "order was added to list";
                                                     }
                                                 } else {
-                                                    response = "Match" + GameService.ACTION_DELIMITER + "B" + GameService.DELIMITER + info[1] + GameService.DELIMITER + price + g.getGameOwner();
+                                                    response = "MATCH" + GameService.ACTION_DELIMITER + "B" + GameService.DELIMITER + info[1] + GameService.DELIMITER + g.getPrice() + GameService.DELIMITER + g.getGameOwner();
                                                 }
 
                                             } else if (info[0].equalsIgnoreCase("S")) {
-                                                Game g1= new Game(info[1],currentUser.getUserName(), price);
+                                                Game g1 = new Game(info[1], currentUser.getUserName(), price);
                                                 Order o1 = orderManager.sellGame(g1);
-                                                if(o1==null) {
-                                                    if(gameManager.addGame(info[1],currentUser.getUserName(), price)){
+                                                if (o1 == null) {
+                                                    if (gameManager.addGame(info[1], currentUser.getUserName(), price)) {
                                                         response = "Game added to list";
-                                                    }
-                                                    else{
+                                                    } else {
                                                         response = "Game already exist";
                                                     }
-                                                }else{
-                                                    response= "S" + GameService.ACTION_DELIMITER + "B" + GameService.DELIMITER + info[1] + GameService.DELIMITER + price + o1.getUserName() ;
+                                                } else {
+                                                    response = "MATCH" + GameService.ACTION_DELIMITER + "S" + GameService.DELIMITER + info[1] + GameService.DELIMITER + o1.getPrice() + GameService.DELIMITER + o1.getUserName();
                                                 }
 
                                             }
@@ -99,13 +98,56 @@ public class GameServer {
                                 break;
                             case GameService.VIEW_REQUEST:
                                 if (currentUser != null) {
-                                    response= "Games";
-                                    response +=gameManager.getGames() ;
-                                    response+= "Orders";
-                                    response +=orderManager.getOrders() ;
-                                }else {
+                                    response = "";
+                                    // response = "Games";
+                                    response += gameManager.getGames() + "$$";
+                                    //response += "Orders";
+                                    response += orderManager.getOrders();
+                                } else {
                                     response = "Not connected";
                                 }
+                                break;
+                            case GameService.CANCEL_REQUEST:
+                                if (currentUser != null) {
+                                    if (info.length == 3) {
+                                        try {
+                                            double price = Double.parseDouble(info[2]);
+                                            if (info[0].equalsIgnoreCase("B")) {
+                                                boolean remove = orderManager.removeOrder(currentUser.getUserName(), info[1], price);
+                                                if (remove) {
+                                                    response = GameService.CANCEL_CANCELLED_RESPONSE;
+                                                } else {
+                                                    response = GameService.NOT_FOUND_RESPONSE;
+                                                }
+                                            } else if (info[0].equalsIgnoreCase("S")) {
+                                                Game g = gameManager.removeGame(info[1], currentUser.getUserName(), price);
+                                                if (g == null) {
+                                                    response = GameService.NOT_FOUND_RESPONSE;
+                                                } else {
+                                                    response = GameService.CANCEL_CANCELLED_RESPONSE;
+                                                }
+                                            }
+                                        } catch (NumberFormatException e) {
+                                            response = GameService.INVALID_REQUEST;
+                                        }
+                                    } else {
+                                        response = GameService.INVALID_REQUEST;
+                                    }
+                                } else {
+                                    response = "Not connected";
+                                }
+                                break;
+                            case GameService.END_REQUEST:
+                                if (currentUser != null) {
+                                    currentUser = null;
+                                    userSession = false;
+                                    response = GameService.END_RESPONSE;
+                                } else {
+                                    response = "Not connected";
+                                }
+                                break;
+                            default:
+                                response = GameService.INVALID_REQUEST;
                                 break;
                         }
 
