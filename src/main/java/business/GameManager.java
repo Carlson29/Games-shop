@@ -25,8 +25,13 @@ public class GameManager {
 
     public String getGames() {
         String output = "";
-        for (Game g : games) {
-            output += g.getGameName() + GameService.DELIMITER + "";
+        for (int i=0; i<games.size(); i++) {
+            if(i!=games.size()-1) {
+                output += games.get(i).getGameOwner()+ GameService.DELIMITER+ games.get(i).getGameName() + GameService.DELIMITER+ games.get(i).getPrice() + "%%" ;
+            }
+            else {
+                output += games.get(i).getGameOwner()+ GameService.DELIMITER+ games.get(i).getGameName() + GameService.DELIMITER+ games.get(i).getPrice() ;
+            }
         }
         return output;
     }
@@ -43,7 +48,7 @@ public class GameManager {
     public boolean containsGame(String gameName, String gameOwner, double price) {
         Game g = new Game(gameName, gameOwner, price);
         for (Game g1 : games) {
-            if (g.equals(g1)) {
+            if (g.getGameName().equalsIgnoreCase(g1.getGameName()) && g.getGameOwner().equalsIgnoreCase(g1.getGameOwner()) && g.getPrice() == g1.getPrice()) {
                 return true;
             }
         }
@@ -53,7 +58,7 @@ public class GameManager {
     public Game removeGame(String gameName, String gameOwner, double price) {
         Game game = new Game(gameName, gameOwner, price);
         for (int i = 0; i < games.size(); i++) {
-            if (games.get(i).equals(game)) {
+            if (games.get(i).getGameOwner().equalsIgnoreCase(game.getGameOwner()) && games.get(i).getGameName().equalsIgnoreCase(game.getGameName()) && games.get(i).getPrice() == game.getPrice()) {
                 Game g = games.remove(i);
                 return g;
             }
