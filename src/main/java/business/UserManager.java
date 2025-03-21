@@ -43,7 +43,9 @@ public class UserManager {
 
     public User addUser(String username) {
         User user = new User(username);
-        usersList.add(user);
+        synchronized(this) {
+            usersList.add(user);
+        }
         return user;
     }
 }
