@@ -25,31 +25,36 @@ public class GameManager {
 
     public String getGames() {
         String output = "";
-        for (int i=0; i<games.size(); i++) {
-            if(i!=games.size()-1) {
-                output += games.get(i).getGameOwner()+ GameService.DELIMITER+ games.get(i).getGameName() + GameService.DELIMITER+ games.get(i).getPrice() + "%%" ;
-            }
-            else {
-                output += games.get(i).getGameOwner()+ GameService.DELIMITER+ games.get(i).getGameName() + GameService.DELIMITER+ games.get(i).getPrice() ;
+        synchronized(this) {
+            for (int i = 0; i < games.size(); i++) {
+                if (i != games.size() - 1) {
+                    output += games.get(i).getGameOwner() + GameService.DELIMITER + games.get(i).getGameName() + GameService.DELIMITER + games.get(i).getPrice() + "%%";
+                } else {
+                    output += games.get(i).getGameOwner() + GameService.DELIMITER + games.get(i).getGameName() + GameService.DELIMITER + games.get(i).getPrice();
+                }
             }
         }
         return output;
     }
 
     public boolean addGame(String gameName, String gameOwner, double price) {
-        if (containsGame(gameName, gameOwner, price) == false) {
-            Game g = new Game(gameName, gameOwner, price);
-            games.add(g);
-            return true;
+        synchronized(this) {
+            if (containsGame(gameName, gameOwner, price) == false) {
+                Game g = new Game(gameName, gameOwner, price);
+                games.add(g);
+                return true;
+            }
         }
         return false;
     }
 
     public boolean containsGame(String gameName, String gameOwner, double price) {
-        Game g = new Game(gameName, gameOwner, price);
-        for (Game g1 : games) {
-            if (g.getGameName().equalsIgnoreCase(g1.getGameName()) && g.getGameOwner().equalsIgnoreCase(g1.getGameOwner()) && g.getPrice() == g1.getPrice()) {
-                return true;
+        synchronized(this) {
+            Game g = new Game(gameName, gameOwner, price);
+            for (Game g1 : games) {
+                if (g.getGameName().equalsIgnoreCase(g1.getGameName()) && g.getGameOwner().equalsIgnoreCase(g1.getGameOwner()) && g.getPrice() == g1.getPrice()) {
+                    return true;
+                }
             }
         }
         return false;
@@ -57,20 +62,24 @@ public class GameManager {
 
     public Game removeGame(String gameName, String gameOwner, double price) {
         Game game = new Game(gameName, gameOwner, price);
-        for (int i = 0; i < games.size(); i++) {
-            if (games.get(i).getGameOwner().equalsIgnoreCase(game.getGameOwner()) && games.get(i).getGameName().equalsIgnoreCase(game.getGameName()) && games.get(i).getPrice() == game.getPrice()) {
-                Game g = games.remove(i);
-                return g;
+        synchronized(this) {
+            for (int i = 0; i < games.size(); i++) {
+                if (games.get(i).getGameOwner().equalsIgnoreCase(game.getGameOwner()) && games.get(i).getGameName().equalsIgnoreCase(game.getGameName()) && games.get(i).getPrice() == game.getPrice()) {
+                    Game g = games.remove(i);
+                    return g;
+                }
             }
         }
         return null;
     }
 
     public Game buyGame(Order order) {
-        for (int i = 0; i < games.size(); i++) {
-            if(games.get(i).getGameName().equalsIgnoreCase(order.getGameName()) && games.get(i).getPrice() <= order.getPrice()) {
-                Game g = games.remove(i);
-                return g;
+        synchronized(this) {
+            for (int i = 0; i < games.size(); i++) {
+                if (games.get(i).getGameName().equalsIgnoreCase(order.getGameName()) && games.get(i).getPrice() <= order.getPrice()) {
+                    Game g = games.remove(i);
+                    return g;
+                }
             }
         }
         return null;
