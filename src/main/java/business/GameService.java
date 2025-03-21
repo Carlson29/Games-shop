@@ -18,5 +18,13 @@ public class GameService {
     public static final String DELIMITER = ",";
     public static final String ACTION_DELIMITER = ":";
     public static final String INVALID_REQUEST = "INVALID_REQUEST";
+    public static final String NOT_CONNECTED_RESPONSE = "NOT_CONNECTED";
+    public static final String GAME_ORDER_DELIMITER = "$$";
+    public static final String ORDER_EXIST_RESPONSE = "ORDER_EXIST";
+    public static final String ORDER_ADDED_RESPONSE = "ORDER_ADDED";
+    public static final String GAME_ADDED_RESPONSE = "GAME_ADDED";
+    public static final String GAME_EXIST_RESPONSE = "GAME_EXIST";
+    public static final String BUY_ID = "B";
+    public static final String SELL_ID = "S";
     //what to use for DELIMITER, we used %% for Michelle for film service
 }
