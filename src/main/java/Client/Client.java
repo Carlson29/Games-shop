@@ -15,10 +15,11 @@ public class Client {
     //private static boolean shuttingDown = false;
     private static String choice = "-1";
     private static boolean validClient = true;
-    private static boolean connectUsername = true;
+    private static boolean connectUsername = false;
 
     public static void main(String[] args) {
         Scanner userInput = new Scanner(System.in);
+        OrderManager oM = new OrderManager();
         //loggedIn = false;
         while (validClient) {
             // Requests a connection
@@ -49,17 +50,27 @@ public class Client {
                             //User response
                             if (choice.equalsIgnoreCase("1") && response.equals(GameService.USER_CONNECT_RESPONSE)) {
                                 System.out.println("Username connect.");
+                                connectUsername = true;
                             }
 
                             //Send Order response
                             if (choice.equalsIgnoreCase("2") && response.equals(GameService.ORDER_ADDED_RESPONSE)) {
                                 System.out.println("Order added.");
                             }
-                            if (choice.equalsIgnoreCase("2") && response.equals(GameService.ORDER_EXIST_RESPONSE)) {
-                                System.out.println("Order exist.");
+                            if (choice.equalsIgnoreCase("2") && response.equals(GameService.GAME_ADDED_RESPONSE)) {
+                                System.out.println("Game added.");
                             }
-                            if (choice.equalsIgnoreCase("2") && response.equals(GameService.ORDER_MATCH_RESPONSE)) {
+                            if (choice.equalsIgnoreCase("2") && response.equals(GameService.ORDER_EXIST_RESPONSE)) {
+                                System.out.println("Order exist already.");
+                            }
+                            if (choice.equalsIgnoreCase("2") && response.equals(GameService.GAME_EXIST_RESPONSE)) {
+                                System.out.println("Game exist already.");
+                            }
+                            if (choice.equalsIgnoreCase("2") && response.equals(GameService.ORDER_ADDED_RESPONSE) == false && response.equals(GameService.GAME_ADDED_RESPONSE) == false && response.equals(GameService.ORDER_EXIST_RESPONSE) == false && response.equals(GameService.GAME_EXIST_RESPONSE) == false) {
+                                // System.out.println(response);
+                                response = oM.decodeMatch(response);
                                 System.out.println("Order Match.");
+                                System.out.println(response);
                             }
 
                             //Cancel response
@@ -74,8 +85,7 @@ public class Client {
                             if (choice.equalsIgnoreCase("4") && response.equals(GameService.NOT_FOUND_RESPONSE) == false) {
 //                                Game decoded = Film.decode(response, FilmService.DELIMITER);
 //                                System.out.println(decoded);
-                                OrderManager oM = new OrderManager();
-                               response= oM.decode(response);
+                                response = oM.decode(response);
                                 System.out.println(response);
                             }
 
@@ -83,12 +93,16 @@ public class Client {
                             if (choice.equalsIgnoreCase("0") && response.equals(GameService.END_RESPONSE)) {
                                 System.out.println("Goodbye, you're exit.");
                                 connectUsername = false;
-                                validClient = false;
+                                // validClient = false;
+                                validSession = false;
                             }
 
                             //Invalid request response
                             if (response.equals(GameService.NOT_FOUND_RESPONSE)) {
                                 System.out.println("Please try again, this is invalid choice.");
+                            }
+                            if (response.equals(GameService.INVALID_REQUEST)) {
+                                System.out.println("The request is invalid.");
                             }
                         }
                     }
@@ -136,20 +150,23 @@ public class Client {
                     request = GameService.USER_REQUEST + GameService.ACTION_DELIMITER + username;
                     break;
                 case "2":
-                    if(connectUsername){
+                    if (connectUsername) {
                         System.out.println("Send Order: ");
                         //gameStatus = getValidStatus(userInput,"Enter B(Buy) or S(Sell)");
-                        System.out.println("Enter B(Buy) or S(Sell): ");
-                        gameStatus = userInput.nextLine();
+                       /* System.out.println("Enter B(Buy) or S(Sell): ");
+                        gameStatus = userInput.nextLine();*/
+                        gameStatus = getValidStatus(userInput, "Enter B(Buy) or S(Sell): ");
                         System.out.println("Enter Game name: ");
                         gameName = userInput.nextLine();
                         System.out.println("Enter price: ");
                         price = userInput.nextDouble();
                         request = GameService.ORDER_REQUEST + GameService.ACTION_DELIMITER + gameStatus + GameService.DELIMITER + gameName + GameService.DELIMITER + price;
+                    } else {
+                        System.out.println("You are not connected, please enter username to connect");
                     }
                     break;
                 case "3":
-                    if(connectUsername) {
+                    if (connectUsername) {
                         System.out.println("Cancel Order: ");
 //                        gameStatus = getValidStatus(userInput,"Enter B(Buy) or S(Sell)");
                         System.out.println("Enter B(Buy) or S(Sell): ");
@@ -159,12 +176,16 @@ public class Client {
                         System.out.println("Enter price: ");
                         price = userInput.nextDouble();
                         request = GameService.CANCEL_REQUEST + GameService.ACTION_DELIMITER + gameStatus + GameService.DELIMITER + gameName + GameService.DELIMITER + price;
+                    } else {
+                        System.out.println("You are not connected, please enter username to connect");
                     }
                     break;
                 case "4":
-                    if(connectUsername){
+                    if (connectUsername) {
                         System.out.println("View Order: ");
                         request = GameService.VIEW_REQUEST;
+                    } else {
+                        System.out.println("You are not connected, please enter username to connect");
                     }
                     break;
                 default:
@@ -177,22 +198,17 @@ public class Client {
         return request;
     }
 
-//    public static String getValidStatus(Scanner userInput, String prompt) {
-//        boolean valid = false;
-//        String status = null;
-//        while (!valid) {
-//            System.out.println(prompt);
-//            try {
-//                status = userInput.nextLine();
-//                if (status.equalsIgnoreCase("B") && status.equalsIgnoreCase("S")) {
-//                    valid = true;
-//                }
-//            } catch (InputMismatchException e) {
-//                System.out.println("Please enter valid status ID: B(Buy) or S(Sell). ");
-//                userInput.nextLine();
-//            }
-//        }
-//        userInput.nextLine();
-//        return status;
-//    }
+    public static String getValidStatus(Scanner userInput, String prompt) {
+        boolean valid = false;
+        String status = null;
+        while (!valid) {
+            System.out.println(prompt);
+            status = userInput.nextLine();
+            if (status.equalsIgnoreCase("B") || status.equalsIgnoreCase("S")) {
+                valid = true;
+            }
+
+        }
+        return status;
+    }
 }
