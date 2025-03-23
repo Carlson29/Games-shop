@@ -4,6 +4,8 @@ import business.GameService;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -11,49 +13,100 @@ public class Client {
 
     //private static boolean shuttingDown = false;
     private static String choice = "-1";
+    private static boolean validClient = true;
     private static boolean connectUsername = true;
 
     public static void main(String[] args) {
-        try
-        {
-            // Step 1 (on consumer side) - Establish channel of communication
-            Socket dataSocket = new Socket(GameService.HOST, GameService.PORT);
+        Scanner userInput = new Scanner(System.in);
+        //loggedIn = false;
+        while (validClient) {
+            // Requests a connection
+            try (Socket dataSocket = new Socket(GameService.HOST, GameService.PORT)) {
 
-            // Step 3) Build output and input objects
-            OutputStream out = dataSocket.getOutputStream();
-            PrintWriter output = new PrintWriter(new OutputStreamWriter(out));
+                // Sets up communication lines
+                // Create a Scanner to receive messages
+                // Create a Printwriter to send messages
+                try (Scanner input = new Scanner(dataSocket.getInputStream());
+                     PrintWriter output = new PrintWriter(dataSocket.getOutputStream())) {
+                    boolean validSession = true;
+                    // Repeated:
+                    while (validSession) {
+                        // Ask user for information to be sent
+                        System.out.println("Please enter a message to be sent (Send EXIT to end):");
+                        String message = generateRequest(userInput);
+                        if (message != null) {
+                            // Send message to server
+                            output.println(message);
+                            // Flush message through to server
+                            output.flush();
 
-            InputStream in = dataSocket.getInputStream();
-            Scanner input = new Scanner(new InputStreamReader(in));
+                            // Receive message from server
+                            String response = input.nextLine();
+                            // Display result to user
+                            //System.out.println("Received from server: " + response);
 
-            Scanner keyboard = new Scanner(System.in);
-            String message = "";
-            boolean state =true;
-            while(state)
-            {
-                System.out.println("Please enter a message:");
-                message = keyboard.nextLine();
+                            //User response
+                            if (choice.equalsIgnoreCase("1") && response.equals(GameService.USER_CONNECT_RESPONSE)) {
+                                System.out.println("Username connect.");
+                            }
 
-                // Exchange messages with provider
-                output.println(message);
-                output.flush();
+                            //Send Order response
+                            if (choice.equalsIgnoreCase("2") && response.equals(GameService.ORDER_ADDED_RESPONSE)) {
+                                System.out.println("Order added.");
+                            }
+                            if (choice.equalsIgnoreCase("2") && response.equals(GameService.ORDER_EXIST_RESPONSE)) {
+                                System.out.println("Order exist.");
+                            }
+                            if (choice.equalsIgnoreCase("2") && response.equals(GameService.ORDER_MATCH_RESPONSE)) {
+                                System.out.println("Order Match.");
+                            }
 
-                String response = input.nextLine();
-                System.out.println("Response: " + response);
+                            //Cancel response
+                            if (choice.equalsIgnoreCase("3") && response.equals(GameService.CANCEL_CANCELLED_RESPONSE)) {
+                                System.out.println("Order Cancelled.");
+                            }
+                            if (choice.equalsIgnoreCase("3") && response.equals(GameService.NOT_FOUND_RESPONSE)) {
+                                System.out.println("Order Not Found.");
+                            }
+
+                            //View game list
+                            if (choice.equalsIgnoreCase("4") && response.equals(GameService.NOT_FOUND_RESPONSE) == false) {
+//                                Game decoded = Film.decode(response, FilmService.DELIMITER);
+//                                System.out.println(decoded);
+                            }
+
+                            //Exit response
+                            if (response.equals(GameService.END_RESPONSE)) {
+                                System.out.println("Goodbye, you're exit.");
+                                connectUsername = false;
+                                validClient = false;
+                            }
+
+                            //Invalid request response
+                            if (response.equals(GameService.NOT_FOUND_RESPONSE)) {
+                                System.out.println("Please try again, this is invalid choice.");
+                            }
+                        }
+                    }
+                }
+            } catch (UnknownHostException e) {
+                System.out.println("Host cannot be found at this moment. Try again later");
+            } catch (IOException e) {
+                System.out.println("An IO Exception occurred: " + e.getMessage());
             }
-            dataSocket.close();
-        }catch(Exception e)
-        {
-            System.out.println("An error occurred: "  + e.getMessage());
         }
+        // Close connection to server
     }
 
     public static void displayMenu() {
         System.out.println("0) End");
         System.out.println("1) Connect Username");
-        System.out.println("2) Send Order");
-        System.out.println("3) Cancel Order");
-        System.out.println("4) View Order");
+        while (connectUsername){
+            System.out.println("2) Send Order");
+            System.out.println("3) Cancel Order");
+            System.out.println("4) View Order");
+        }
+
     }
 
     public static String generateRequest(Scanner userInput) {
@@ -66,7 +119,6 @@ public class Client {
 
             String username;
             String gameName;
-            //String gameOwner;
             String gameStatus;
             double price;
 
