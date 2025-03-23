@@ -85,11 +85,16 @@ public class Handler implements Runnable {
     public String connect(String[] info) {
         String response = "";
         if (info.length == 1) {
-            currentUser = userManager.searchByUsername(info[0]);
-            if (currentUser == null) {
-                currentUser = userManager.addUser(info[0]);
+            if (currentUser!=null) {
+                response = GameService.ALREADY_CONNECTED;
             }
-            response = GameService.USER_CONNECT_RESPONSE;
+            else{
+                currentUser = userManager.searchByUsername(info[0]);
+                if (currentUser == null) {
+                    currentUser = userManager.addUser(info[0]);
+                }
+                response = GameService.USER_CONNECT_RESPONSE;
+            }
         } else {
             response = GameService.INVALID_REQUEST;
         }
@@ -147,7 +152,7 @@ public class Handler implements Runnable {
         if (currentUser != null) {
             response = "";
             // response = "Games";
-            response += gameManager.getGames() + GameService.GAME_ORDER_DELIMITER;
+            response += gameManager.getGames() + " " + GameService.GAME_ORDER_DELIMITER  + " ";
             //response += "Orders";
             response += orderManager.getOrders();
         } else {

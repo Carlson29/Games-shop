@@ -26,5 +26,6 @@ public class GameService {
     public static final String GAME_EXIST_RESPONSE = "GAME_EXIST";
     public static final String BUY_ID = "B";
     public static final String SELL_ID = "S";
+    public static final String ALREADY_CONNECTED = "ALREADY_CONNECTED";
     //what to use for DELIMITER, we used %% for Michelle for film service
 }

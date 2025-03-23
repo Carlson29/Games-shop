@@ -1,6 +1,7 @@
 package Client;
 
 import business.GameService;
+import business.OrderManager;
 
 import java.io.*;
 import java.net.Socket;
@@ -73,6 +74,9 @@ public class Client {
                             if (choice.equalsIgnoreCase("4") && response.equals(GameService.NOT_FOUND_RESPONSE) == false) {
 //                                Game decoded = Film.decode(response, FilmService.DELIMITER);
 //                                System.out.println(decoded);
+                                OrderManager oM = new OrderManager();
+                               response= oM.decode(response);
+                                System.out.println(response);
                             }
 
                             //Exit response
