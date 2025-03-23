@@ -20,8 +20,6 @@ public class GameServer {
 
     public static void main(String[] args) {
 
-
-
         try (ServerSocket listeningSocket = new ServerSocket(GameService.PORT)) {
            userManager = new UserManager();
            gameManager = new GameManager();
