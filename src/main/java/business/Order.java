@@ -57,4 +57,6 @@ private double price;
                 " price=" + price +
                 '}';
     }
+
+    //should we need encode and decode for view order?
 }

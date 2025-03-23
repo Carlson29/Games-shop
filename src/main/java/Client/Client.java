@@ -76,7 +76,7 @@ public class Client {
                             }
 
                             //Exit response
-                            if (response.equals(GameService.END_RESPONSE)) {
+                            if (choice.equalsIgnoreCase("0") && response.equals(GameService.END_RESPONSE)) {
                                 System.out.println("Goodbye, you're exit.");
                                 connectUsername = false;
                                 validClient = false;
@@ -101,11 +101,9 @@ public class Client {
     public static void displayMenu() {
         System.out.println("0) End");
         System.out.println("1) Connect Username");
-        while (connectUsername){
-            System.out.println("2) Send Order");
-            System.out.println("3) Cancel Order");
-            System.out.println("4) View Order");
-        }
+        System.out.println("2) Send Order");
+        System.out.println("3) Cancel Order");
+        System.out.println("4) View Order");
 
     }
 
@@ -136,7 +134,9 @@ public class Client {
                 case "2":
                     if(connectUsername){
                         System.out.println("Send Order: ");
-                        gameStatus = getValidStatus(userInput,"Enter B(Buy) or S(Sell)");
+                        //gameStatus = getValidStatus(userInput,"Enter B(Buy) or S(Sell)");
+                        System.out.println("Enter B(Buy) or S(Sell): ");
+                        gameStatus = userInput.nextLine();
                         System.out.println("Enter Game name: ");
                         gameName = userInput.nextLine();
                         System.out.println("Enter price: ");
@@ -147,7 +147,9 @@ public class Client {
                 case "3":
                     if(connectUsername) {
                         System.out.println("Cancel Order: ");
-                        gameStatus = getValidStatus(userInput,"Enter B(Buy) or S(Sell)");
+//                        gameStatus = getValidStatus(userInput,"Enter B(Buy) or S(Sell)");
+                        System.out.println("Enter B(Buy) or S(Sell): ");
+                        gameStatus = userInput.nextLine();
                         System.out.println("Enter Game name: ");
                         gameName = userInput.nextLine();
                         System.out.println("Enter price: ");
@@ -171,22 +173,22 @@ public class Client {
         return request;
     }
 
-    public static String getValidStatus(Scanner userInput, String prompt) {
-        boolean valid = false;
-        String status = null;
-        while (!valid) {
-            System.out.println(prompt);
-            try {
-                status = userInput.nextLine();
-                if (status.equalsIgnoreCase("B") && status.equalsIgnoreCase("S")) {
-                    valid = true;
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Please enter valid status ID: B(Buy) or S(Sell). ");
-                userInput.nextLine();
-            }
-        }
-        userInput.nextLine();
-        return status;
-    }
+//    public static String getValidStatus(Scanner userInput, String prompt) {
+//        boolean valid = false;
+//        String status = null;
+//        while (!valid) {
+//            System.out.println(prompt);
+//            try {
+//                status = userInput.nextLine();
+//                if (status.equalsIgnoreCase("B") && status.equalsIgnoreCase("S")) {
+//                    valid = true;
+//                }
+//            } catch (InputMismatchException e) {
+//                System.out.println("Please enter valid status ID: B(Buy) or S(Sell). ");
+//                userInput.nextLine();
+//            }
+//        }
+//        userInput.nextLine();
+//        return status;
+//    }
 }
