@@ -17,6 +17,14 @@ public class OrderManager {
         orders.add(o2);
     }
 
+    /**
+     * Add a new Order to the order list.
+     *
+     * @param userName username of the user
+     * @param gameName name of the game
+     * @param price price of the game
+     * @return true if the order was successfully added, else return null.
+     */
     public Order addOrder(String userName, String gameName, double price) {
         synchronized (this) {
             if (containsOrder(userName, gameName, price) == false) {
@@ -28,6 +36,11 @@ public class OrderManager {
         return null;
     }
 
+    /**
+     * Get Game and Book Order from the order list.
+     *
+     * @return order list, else return null.
+     */
     public String getOrders() {
         String output = "";
         synchronized (this) {
@@ -43,6 +56,14 @@ public class OrderManager {
         return output;
     }
 
+    /**
+     * To check is the order contain to the order list.
+     *
+     * @param userName username of the user
+     * @param gameName name of the game
+     * @param price price of the game
+     * @return true if the order contains in order list, else return false.
+     */
     public boolean containsOrder(String userName, String gameName, double price) {
         Order o1 = new Order(userName, gameName, price);
         synchronized (this) {
@@ -55,6 +76,14 @@ public class OrderManager {
         return false;
     }
 
+    /**
+     * Remove an order from order list.
+     *
+     * @param userName username of the user
+     * @param gameName name of the game
+     * @param price price of the game
+     * @return true if the order was successfully removed, else return false.
+     */
     public boolean removeOrder(String userName, String gameName, double price) {
         Order o1 = new Order(userName, gameName, price);
         synchronized (this) {
@@ -68,6 +97,12 @@ public class OrderManager {
         return false;
     }
 
+    /**
+     * Sell a game to the order list.
+     *
+     * @param game a game
+     * @return order if the order was successfully sell, else return null.
+     */
     public Order sellGame(Game game) {
         synchronized (this) {
             for (int i = 0; i < orders.size(); i++) {

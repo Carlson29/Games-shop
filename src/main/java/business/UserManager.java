@@ -41,6 +41,13 @@ public class UserManager {
         return user;
     }
 
+    /**
+     * Add a new user to the list of usersList.
+     * If a user already exists matching the username in usersList, new user won't be added.
+     *
+     * @param username username of the user
+     * @return true if the user was successfully added, else return false.
+     */
     public User addUser(String username) {
         User user = new User(username);
         synchronized(this) {
