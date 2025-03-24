@@ -55,6 +55,11 @@ public class Client {
                             }
                             if(choice.equalsIgnoreCase("1") && response.equals(GameService.ALREADY_CONNECTED)){
                                 System.out.println("Username already connected.");
+                                connectUsername = true;
+                            }
+                            if(choice.equalsIgnoreCase("1") && response.equals(GameService.NOT_CONNECTED_RESPONSE)){
+                                System.out.println("You are not connected, please enter username to connect");
+                                connectUsername = false;
                             }
 
                             //Send Order response
@@ -87,8 +92,6 @@ public class Client {
 
                             //View game list
                             if (choice.equalsIgnoreCase("4") && response.equals(GameService.NOT_FOUND_RESPONSE) == false) {
-//                                Game decoded = Film.decode(response, FilmService.DELIMITER);
-//                                System.out.println(decoded);
                                 response = codec.decode(response);
                                 System.out.println(response);
                             }
@@ -97,7 +100,7 @@ public class Client {
                             if (choice.equalsIgnoreCase("0") && response.equals(GameService.END_RESPONSE)) {
                                 System.out.println("Goodbye, you're exit.");
                                 connectUsername = false;
-                                // validClient = false;
+                                validClient = false;
                                 validSession = false;
                             }
 
@@ -153,9 +156,6 @@ public class Client {
                 case "2":
                     if (connectUsername) {
                         System.out.println("Send Order: ");
-                        //gameStatus = getValidStatus(userInput,"Enter B(Buy) or S(Sell)");
-                       /* System.out.println("Enter B(Buy) or S(Sell): ");
-                        gameStatus = userInput.nextLine();*/
                         gameStatus = getValidStatus(userInput, "Enter B(Buy) or S(Sell): ");
                         System.out.println("Enter Game name: ");
                         gameName = userInput.nextLine();
@@ -169,9 +169,7 @@ public class Client {
                 case "3":
                     if (connectUsername) {
                         System.out.println("Cancel Order: ");
-//                        gameStatus = getValidStatus(userInput,"Enter B(Buy) or S(Sell)");
-                        System.out.println("Enter B(Buy) or S(Sell): ");
-                        gameStatus = userInput.nextLine();
+                        gameStatus = getValidStatus(userInput, "Enter B(Buy) or S(Sell): ");
                         System.out.println("Enter Game name: ");
                         gameName = userInput.nextLine();
                         System.out.println("Enter price: ");
