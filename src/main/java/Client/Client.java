@@ -1,5 +1,6 @@
 package Client;
 
+import business.Codec;
 import business.GameService;
 import business.OrderManager;
 
@@ -19,7 +20,7 @@ public class Client {
 
     public static void main(String[] args) {
         Scanner userInput = new Scanner(System.in);
-        OrderManager oM = new OrderManager();
+        Codec codec = new Codec();
         //loggedIn = false;
         while (validClient) {
             // Requests a connection
@@ -68,7 +69,7 @@ public class Client {
                             }
                             if (choice.equalsIgnoreCase("2") && response.equals(GameService.ORDER_ADDED_RESPONSE) == false && response.equals(GameService.GAME_ADDED_RESPONSE) == false && response.equals(GameService.ORDER_EXIST_RESPONSE) == false && response.equals(GameService.GAME_EXIST_RESPONSE) == false) {
                                 // System.out.println(response);
-                                response = oM.decodeMatch(response);
+                                response = codec.decodeMatch(response);
                                 System.out.println("Order Match.");
                                 System.out.println(response);
                             }
@@ -85,7 +86,7 @@ public class Client {
                             if (choice.equalsIgnoreCase("4") && response.equals(GameService.NOT_FOUND_RESPONSE) == false) {
 //                                Game decoded = Film.decode(response, FilmService.DELIMITER);
 //                                System.out.println(decoded);
-                                response = oM.decode(response);
+                                response = codec.decode(response);
                                 System.out.println(response);
                             }
 
