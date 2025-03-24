@@ -57,7 +57,7 @@ public class Client {
                                 System.out.println("Username already connected.");
                                 connectUsername = true;
                             }
-                            if(choice.equalsIgnoreCase("1") && response.equals(GameService.NOT_CONNECTED_RESPONSE)){
+                            if(response.equals(GameService.NOT_CONNECTED_RESPONSE)){
                                 System.out.println("You are not connected, please enter username to connect");
                                 connectUsername = false;
                             }
