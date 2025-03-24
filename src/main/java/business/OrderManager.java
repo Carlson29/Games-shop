@@ -37,7 +37,7 @@ public class OrderManager {
     }
 
     /**
-     * Get Game and Book Order from the order list.
+     * Get order from the order list.
      *
      * @return order list, else return null.
      */
@@ -57,7 +57,7 @@ public class OrderManager {
     }
 
     /**
-     * To check is the order contain to the order list.
+     * To check the order contain in the order list.
      *
      * @param userName username of the user
      * @param gameName name of the game
@@ -98,7 +98,7 @@ public class OrderManager {
     }
 
     /**
-     * Sell a game to the order list.
+     * Sell a game from the order list.
      *
      * @param game a game
      * @return order if the order was successfully sell, else return null.

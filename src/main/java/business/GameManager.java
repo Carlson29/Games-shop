@@ -22,6 +22,11 @@ public class GameManager {
         games.add(g4);
     }
 
+    /**
+     * Get games from the game list.
+     *
+     * @return order list, else return null.
+     */
     public String getGames() {
         String output = "";
         synchronized(this) {
@@ -35,7 +40,14 @@ public class GameManager {
         }
         return output;
     }
-
+    /**
+     * Add a new game to the game list.
+     *
+     * @param gameName name of the game
+     * @param gameOwner owner of the game
+     * @param price price of the game
+     * @return true if the game was successfully added, else return false.
+     */
     public boolean addGame(String gameName, String gameOwner, double price) {
         synchronized(this) {
             if (containsGame(gameName, gameOwner, price) == false) {
@@ -47,6 +59,14 @@ public class GameManager {
         return false;
     }
 
+    /**
+     * To check the game contain in the game list.
+     *
+     * @param gameName name of the game
+     * @param gameOwner owner of the game
+     * @param price price of the game
+     * @return true if the game contains in order list, else return false.
+     */
     public boolean containsGame(String gameName, String gameOwner, double price) {
         synchronized(this) {
             Game g = new Game(gameName, gameOwner, price);
@@ -59,6 +79,14 @@ public class GameManager {
         return false;
     }
 
+    /**
+     * Remove a game from game list.
+     *
+     * @param gameName name of the game
+     * @param gameOwner owner of the game
+     * @param price price of the game
+     * @return game if the game was successfully removed, else return null.
+     */
     public Game removeGame(String gameName, String gameOwner, double price) {
         Game game = new Game(gameName, gameOwner, price);
         synchronized(this) {
@@ -72,6 +100,12 @@ public class GameManager {
         return null;
     }
 
+    /**
+     * Buy a game from the game list.
+     *
+     * @param order an order
+     * @return game if the game was successfully buy, else return null.
+     */
     public Game buyGame(Order order) {
         synchronized(this) {
             for (int i = 0; i < games.size(); i++) {
@@ -83,8 +117,5 @@ public class GameManager {
         }
         return null;
     }
-
-    //need function of new order and cancel order
-    //need compare price of game to match
 
 }
