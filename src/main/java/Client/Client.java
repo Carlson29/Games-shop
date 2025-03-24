@@ -53,6 +53,9 @@ public class Client {
                                 System.out.println("Username connect.");
                                 connectUsername = true;
                             }
+                            if(choice.equalsIgnoreCase("1") && response.equals(GameService.ALREADY_CONNECTED)){
+                                System.out.println("Username already connected.");
+                            }
 
                             //Send Order response
                             if (choice.equalsIgnoreCase("2") && response.equals(GameService.ORDER_ADDED_RESPONSE)) {
@@ -99,11 +102,8 @@ public class Client {
                             }
 
                             //Invalid request response
-                            if (response.equals(GameService.NOT_FOUND_RESPONSE)) {
-                                System.out.println("Please try again, this is invalid choice.");
-                            }
                             if (response.equals(GameService.INVALID_REQUEST)) {
-                                System.out.println("The request is invalid.");
+                                System.out.println("Please try again, this is invalid choice.");
                             }
                         }
                     }
